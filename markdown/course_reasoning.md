@@ -49,7 +49,7 @@ marp: true
 
 _Program Induction by Rationale Generation: Learning to Solve and Explain Algebraic Word Problems._ [1]
 
-<center><img height="400px" src="AdvancedNLP/imgs/course10/math_problem.jpg"/></center>
+<center><img height="400px" src=".../imgs/course10/math_problem.jpg"/></center>
 
 ---
 
@@ -57,7 +57,7 @@ _Program Induction by Rationale Generation: Learning to Solve and Explain Algebr
 ### _Reasoning and Decomposition_
 
 <style scoped>section{font-size:30px;}</style>
-<center><img width="1100" src="AdvancedNLP/imgs/course10/math_problem_decomposed.jpg"/></center>
+<center><img width="1100" src=".../imgs/course10/math_problem_decomposed.jpg"/></center>
 
 **Figure 1**: Example of the reasoning problems in _Program Induction by Rationale Generation: Learning to Solve and Explain Algebraic Word Problems._ [1]. This paper, published at ACL in 2017, is the first one to use natural language to describe intermediate reasoning steps.
 ---
