@@ -77,24 +77,21 @@ System 1 is prone to **cognitive biases**, System 2 is **rational**. How do mach
 
 ### _Reasoning and Decomposition_
 
-<style scoped>section{font-size:30px;}</style>
-<center><img width="800" src="https://figures.semanticscholar.org/e816f788767eec6a8ef0ea9eddd0e902435d4271/6-Table5-1.png"/></center>
 
-**Table 5**: Results on different phases of adaptive pretraining compared to the baseline RoBERTa (col. 1). Our approaches are $DAPT$ (col. 2, §3), $TAPT$ (col. 3, §4), and a combination of both (col. 4).
 
 ---
 
 
-### Specialized models (BioBERT, SciBERT, Galactica)
+### Chain of Thought Prompting
 
-"[..] the word distributions of general and biomedical corpora are quite different, which can often be a problem for biomedical text mining models." [2]
+<center><img width="800" src=".../imgs/course10/CoT-prompting.png"><\center>
 
+**Figure 2**: The 2021 NeurIPS paper by Wei et al. introduced *Chain of Thought (CoT) prompting*, which enables large language models to tackle complex arithmetic, commonsense, and symbolic reasoning tasks. Chain-of-thought reasoning processes are highlighted.
 ---
 
 
-### Specialized models (BioBERT, SciBERT, Galactica)
+### Chain of Thought prompting
 
-<center><img width="900" src="https://figures.semanticscholar.org/1e43c7084bdcb6b3102afaf301cce10faead2702/3-Table1-1.png"/></center>
 
 ---
 
