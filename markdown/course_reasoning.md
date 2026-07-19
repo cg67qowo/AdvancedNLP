@@ -23,16 +23,23 @@ marp: true
 
 ## Contents
 
+<small>
+
 1. **What is reasoning?**
     a. Reasoning and Decomposition
-2. **Chain of Thought**
+2. **Prompting Methods, Inference-Time reasoning**
     a. Chain of Thought prompting
-    b. Train of Thoughts, ...
-3. **Training to reason**
-    a. RLHF
-    b. DeepSeek-R1?
+    b. Train of Thoughts
+    c. Analogical Prompting
+3. **Training for reasoning**
+    a. RLHF Recap
+    b. Rewards and Bootstrapping, STaR, ORM, PRM
+    c. Reinforcement Learning with Verifiable Rewards
+    d. DeepSeek-R1?
 4. **Test-time compute?**
 5. **Conclusion and critical questions**
+
+</small>
 
 ---
 
@@ -44,26 +51,38 @@ marp: true
 ---
 
 
-<!--footer: "What is reasoning?" -->
-### _Reasoning and Decomposition_
+<!--footer: "Reasoning and decomposition" -->
+### Reasoning and Decomposition
+
+<small> 
 
 _Program Induction by Rationale Generation: Learning to Solve and Explain Algebraic Word Problems._ [1]
 
-<center><img height="400px" src=".../imgs/course10/math_problem.jpg"/></center>
+</small>
+<br>
+
+<center><img height="350px" src="../imgs/course10/math_problem.jpg"/></center>
 
 ---
 
 
-### _Reasoning and Decomposition_
+### Reasoning and Decomposition
 
 <style scoped>section{font-size:30px;}</style>
-<center><img width="1100" src=".../imgs/course10/math_problem_decomposed.jpg"/></center>
+<center><img width="800" src="../imgs/course10/math_problem_decomposed.jpg"/></center>
+
+<br>
+
+<small>
 
 **Figure 1**: Example of the reasoning problems in _Program Induction by Rationale Generation: Learning to Solve and Explain Algebraic Word Problems._ [1]. This paper, published at ACL in 2017, is the first one to use natural language to describe intermediate reasoning steps.
+
+</small>
+
 ---
 
 
-### _Reasoning and Decomposition
+### Reasoning and Decomposition
 
 _Thinking, Fast and Slow. [2]_
 
@@ -81,283 +100,322 @@ System 1 is prone to **cognitive biases**, System 2 is **rational**. How do mach
 
 ---
 
+<!--_class: lead -->
+<!--footer: "Inference time reasoning" -->
+
+## Prompting strategies: inference time reasoning
+
+---
 
 ### Chain of Thought Prompting
 
-<center><img width="800" src=".../imgs/course10/CoT-prompting.png"><\center>
+<center><img width="700" src="../imgs/course10/CoT-prompting.png"></center>
 
-**Figure 2**: The 2021 NeurIPS paper by Wei et al. introduced *Chain of Thought (CoT) prompting*, which enables large language models to tackle complex arithmetic, commonsense, and symbolic reasoning tasks. Chain-of-thought reasoning processes are highlighted.
+<small>
+
+**Figure 2** : The 2021 NeurIPS paper by Wei et al. introduced *Chain of Thought (CoT) prompting*, which enables large language models to tackle complex arithmetic, commonsense, and symbolic reasoning tasks. Chain-of-thought reasoning processes are highlighted.
+
+</small>
+
 ---
 
 
 ### Chain of Thought prompting
 
+<center><img width="800" src="../imgs/course10/CoT_fewshot_zeroshot.png"> </center>
+
+<small>
+
+Example inputs and outputs of GPT-3. [3]
+
+</small>
 
 ---
 
+### Chain of Thought prompting [4]
 
-### Specialized models (BioBERT, SciBERT, Galactica)
+CoT introduces intermediate reasoning steps $z_1,\ldots,z_n$ between input $x$ and output $y$:
 
-"We showed that **pre-training BERT on biomedical corpora is crucial in applying it to the biomedical domain**. Requiring minimal task-specific architectural modification, **BioBERT outperforms previous models on biomedical text mining tasks** such as NER, RE and QA."
+$$
+x \rightarrow z_1 \rightarrow \cdots \rightarrow z_n \rightarrow y
+$$
 
----
+Each thought is generated sequentially:
 
+$$
+z_i \sim p^{CoT}_{\theta}(z_i \mid x,z_{1:i-1})
+$$
 
-### Specialized models (BioBERT, SciBERT, Galactica)
+The final answer is generated conditioned on the full chain:
 
-<center><img width="900" src="https://figures.semanticscholar.org/156d217b0a911af97fa1b5a71dc909ccef7a8028/4-Table2-1.png"/></center>
-
-**Table 2**: Comparing SciBERT with the reported BioBERT results on biomedical datasets.
-
----
-
-
-### Specialized models (BioBERT, SciBERT, Galactica)
-
-**NB**: SciBERT was trained on curated textual data ; not trained on code or script for example---at leat not trained directly and purposefully on this kind of data
-
----
-
-
-### Specialized models (BioBERT, SciBERT, Galactica)
-
-"Unlike search engines, language models can potentially store, combine and reason about scientific knowledge." [4]
-
-* Specialized models (BioBERT, SciBERT, Galactica) were trained on a rather small highly curated dataset.
-* The data was standardized in markdown format.
+$$
+y \sim p^{CoT}_{\theta}(y \mid x,z_{1:n})
+$$
 
 ---
 
-
-### Specialized models (BioBERT, SciBERT, Galactica)
-
-<style scoped>section{font-size:30px;}</style>
-<center><img width="750" src="https://d3i71xaburhd42.cloudfront.net/7d645a3fd276918374fd9483fd675c28e46506d1/4-Table1-1.png"/></center>
-
-**Table 1**: Tokenizing Nature. Galactica trains on text sequences that represent scientific phenomena.
-
----
+### Chain of Thought prompting [4]
 
 
-### Specialized models (BioBERT, SciBERT, Galactica)
+Summary: reasoning steps and the answer are sampled as a single
+continuous sequence:
 
+$$
+[z_1,\ldots,z_n,y] \sim
+p^{CoT}_{\theta}(z_1,\ldots,z_n,y \mid x)
+$$
 
-1. **Citations:** wrapped with special reference tokens [START_REF] and [END_REF].
-2. **Step-by-Step Reasoning:** wrapped with a working memory token `<work>`, mimicking an internal working memory context.
-3. **Mathematics:** for mathematical content, with or without LaTeX, ASCII operations are splitted into individual characters. Parentheses are treated like digits. The rest of the operations allow for unsplit repetitions. Operation characters are !"#$%&’*+,-./:;<=>?\^_‘| and parentheses are ()[]{}.
+The **decomposition** of thoughts (phrase, sentence, paragraph, ...) is left ambiguous.
 
 ---
 
+### Tree of Thoughts
 
-4. **Numbers:** splitted into individual tokens. For example 737612.62 -> 7,3,7,6,1,2,.,6,2.
-5. **SMILES formula:** wrapped with [START_SMILES] and [END_SMILES] and tokenized absed on characters. Similarly [START_I_SMILES] and [END_I_SMILES] is usedwhere isomeric SMILES is denoted.
-6. **Amino acid sequences:** wrapped with [START_AMINO] and [END_AMINO] and apply character-based tokenization, treating each amino acid character as a single token. For example, MIRLGAPQTL -> M,I,R,L,G,A,P,Q,T,L.
+_Deliberate Problem Solving with Large Language Models_ [4]
 
----
-
-
-1. **DNA sequences:** tokenized based on characters and wrapped inside [START_DNA] and [END_DNA]. For example, CGGTACCCTC -> C, G, G, T, A, C, C, C, T, C.
-
----
-
-### Specialized models (BioBERT, SciBERT, Galactica)
-
-<style scoped>section{font-size:30px;}</style>
-<center><img width="750" src="https://figures.semanticscholar.org/7d645a3fd276918374fd9483fd675c28e46506d1/9-Figure5-1.png"/></center>
-
-**Figure 5:** Prompt Pre-training. Pre-training weighs all tokens equally as part of the self-supervised loss. This leads to a weak relative signal for tasks of interest, meaning model scale has to be large to work. Instruction tuning boosts performance post hoc, and can generalize to unseen tasks of interest, but it risks performance in tasks that are distant from instruction set tasks. Prompt pre-training has a weaker task of interest bias than instruction tuning but less risk of degrading overall task generality.
+1. How to decompose the intermediate process into thought steps
+2. How to generate potential thoughts from each state
+3. How to heuristically evaluate states
+4. What search algorithm to use
 
 ---
 
+### Tree of Thoughts
 
-### Specialized models (BioBERT, SciBERT, Galactica)
+_Deliberate Problem Solving with Large Language Models_ [4]
 
-* **GeLU Activation** - GeLU activations for all model sizes.
-* **Context Window** - a 2048 length context window.
-* **No Biases** - following PaLM, no biase in any of the dense kernels or layer norms.
-* **Learned Positional Embeddings** - learned positional embeddings for the model.
-* **Vocabulary** - vocabulary of 50k tokens using BPE. The vocabulary was generated from a randomly selected 2% subset of the training data.
+<center><img width="900" src="../imgs/course10/ToT_game24.png"></center>
 
----
-
-
-### Specialized models (BioBERT, SciBERT, Galactica)
-
-_Gaussian Error Linear Units function (GeLu)_
-
-$$GELU(x)= x ∗ \Phi(x)$$
-
-Where $\Phi(x)$ is the Gaussian function.
-
-$$GELU(x) \approx x ∗ \frac{1}{2}(1 + Tanh(\frac{2}{\pi}∗(x+0.044715 ∗ x^{3})))$$
+Example of ToT in a game of 24. The LM is prompted for (a) thought generation and (b) valuation.
 
 ---
 
+### Analogical Prompting
 
-### Specialized models (BioBERT, SciBERT, Galactica)
+_Large Language Models as Analogical Reasoners_ [5]
 
-<center><img height="350" src="https://pytorch.org/docs/stable/_images/GELU.png"/></center>
+<center><img width="800" src="../imgs/course10/analogical_prompting.png"></center>
 
-* Allows small negative values when $x < 0$.
-* Avoids the dying ReLU problem.
 
 ---
 
-
-### Specialized models (BioBERT, SciBERT, Galactica)
-
-_Why no biases?_
-
-<center><img height="450" src="https://upload.wikimedia.org/wikipedia/commons/9/91/Full_GPT_architecture.png"/></center>
-
----
-
-
-<!--footer: "Course 8: Domain-Specific NLP" -->
+<!--footer: "Reinforcement Learning Recap" -->
 <!--_class: lead -->
-## Unsupervised Classification Models
 
+## Reinforcement Learning Recap
 ---
 
 
-<!--footer: "Unsupervised Classification Models" -->
-### Représentations out-of-the-box: limitations
+### Reinforcement Learning Recap
 
-Embedding **pooling** is the process of **combining token embeddings** from an encoder model **into a single vector representing the entire input sequence**. Common methods include averaging (**mean pooling**), taking the maximum (**max pooling**), or using a **special token** like `[CLS]` or `<s>`.
+<center><img width="600" src="../imgs/course10/rl_paradimg.jpg"></center>
 
----
+<small> 
 
+In reinforcement learning, an agent learns from the environment by interacting with it through trial and error and receiving rewards as feedback for performing actions.
 
-### Représentations out-of-the-box: limitations
+The agent does not know the environment beforehand (black box): this is why it is a **learning** process.
 
-<center><img height="500" src="https://miro.medium.com/v2/resize:fit:526/format:webp/1*I8uc9PO0ai_o4LJX7tnLbQ.jpeg"/></center>
-
----
-
-
-### Représentations out-of-the-box: limitations
-
-<center><img height="500" src="https://miro.medium.com/v2/resize:fit:542/format:webp/1*T3A4AHF41MieOkZWOyK19g.jpeg"/></center>
+</small>
 
 ---
 
+### Reinforcement Learning
+<ul>
+<li> 
 
-### Représentations out-of-the-box: limitations
+**Environment**, with which the agent interacts, outputs **observations** </li>
+<li> 
 
-<center><img height="500" src="https://miro.medium.com/v2/resize:fit:526/format:webp/1*TS_8YjY4LY5epCvJRHJ6pg.jpeg"/></center>
+Agent makes **decisions** </li>
+<li> 
 
----
+Agent gets new **observations** </li>
+<li> 
 
+Agent gets a **rewards** based on how good (or bad) the actions were. </li>
 
-### Représentations out-of-the-box: limitations
-
-<center><img height="400" src="https://d3i71xaburhd42.cloudfront.net/93d63ec754f29fa22572615320afe0521f7ec66d/3-Figure1-1.png"/></center>
-
-**NB**: when your output pooled vectors are scaled, the cosine similarity is equal to the dot product.
-
----
-
-
-### Représentations out-of-the-box: limitations
-
-Late interaction:
-<center><img width="700" src="https://figures.semanticscholar.org/590432f953b6ce1b4b36bf66a2ac65eeee567515/3-Figure1-1.png"/></center>
+</li>
+</ul>
 
 ---
 
-
-### Représentations out-of-the-box: limitations
-
-The data is being compressed mutliple time -> challeging document can be hard to embed.
-
-Can we do better?
-
----
-
-
-### SimCSE, E5, GTE...
-
-**Contrastive learning** uses **similar data point**  and **opposite ones** in order for the model build **close representations for the first ones** and and **more separated ones for the latter**. [7]
-
-* Unsupervised SimCSE: standard dropout as data augmentation
-* Supervised SimCSE: use pairs in NLI datasets
-
----
-
-
-### SimCSE, E5, GTE...
-
-$$\mathcal{L}_{uns} = -log \frac{ exp( \frac{ sim( \textbf{ h }_{ i }, \textbf{ h }_{ i }^{ + } )}{ \tau } ) } {\sum_{j=1}^{N}exp( \frac{ sim( \textbf{ h }_{ i }, \textbf{ h }_{ j }^{ + } )}{ \tau } ) } $$
-
-$$\mathcal{L}_{sup} = -log \frac{ exp( \frac{ sim( \textbf{ h }_{ i }, \textbf{ h }_{ i }^{ + } )}{ \tau } ) } {\sum_{j=1}^{N}exp( \frac{ sim( \textbf{ h }_{ i }, \textbf{ h }_{ j }^{ + } )}{ \tau } ) + exp( \frac{ sim( \textbf{ h }_{ i }, \textbf{ h }_{ j }^{ - } )}{ \tau } ) } $$
-
-[8]
-
----
-
-
-### SimCSE, E5, GTE...
-
-<center><img width="1100" src="https://d3i71xaburhd42.cloudfront.net/c26759e6c701201af2f62f7ee4eb68742b5bf085/2-Figure1-1.png"/></center>
-
----
-
-
-### SimCSE, E5, GTE...
-
-**Contrastive learning mitigates anisotropy** in language models by encouraging **embeddings** to be **more uniformly distributed** in the representation space. It pulls similar embeddings closer and pushes dissimilar ones apart, preventing over-clustering and ensuring better geometric properties for downstream tasks.
-
----
-
-
-<!--footer: "Course 8: Domain-Specific NLP" -->
 <!--_class: lead -->
-## Learning Long-Range Dependencies
+<!--footer: "Training for Reasoning" -->
+## Training for Reasoning
+---
+
+### _STaR: Bootstrapping Reasoning with Reasoning_ [6]
+
+<center><img width="900" src="../imgs/course10/STaR-pipeline.png"></center>
+
+<small>
+
+An overview of STaR and a STaR-generated rationale on CommonsenseQA.Fine-tuning outer loop is the dashed line. Questions and ground truth answers in the dataset, rationales generated using STaR. [4]
+
+</small>
+
+---
+
+#### _STaR: Bootstrapping Reasoning With Reasoning_ [6]
+
+<div style="display:flex; gap:40px">
+
+<div>
+
+##### Input
+
+- Pretrained LLM **M**
+- Dataset:
+  $$ D=\{(x_i,y_i)\} $$
+- Few-shot rationale examples:
+  $$ P=\{(x_i^p,r_i^p,y_i^p)\} $$
+
+</div>
+
+---
+
+#### _STaR: Bootstrapping Reasoning With Reasoning_ [6]
+
+<div style="display:flex; gap:40px">
+
+
+<div>
+
+##### Iterative loop
+
+1. Generate rationale:
+   $$
+   M(x_i,P)\rightarrow(\hat r_i,\hat y_i)
+   $$
+
+2. Filter:
+   $$
+   \hat y_i=y_i
+   $$
+
+3. Fine-tune on:
+   $$
+   (x_i,\hat r_i,y_i)
+   $$
+
+4. Repeat
+
+</div>
+
+</div>
+
+---
+
+### RL in STaR
+
+The LLM first generates a rationale $r$ and then predicts an answer $y$.
+
+$$
+p_M(y|x)=\sum_r p(r|x)p(y|x,r)
+$$
+
+
+STaR approximates maximizing:
+
+$$
+J(M)=
+\sum_i
+\mathbb{E}_{\hat r_i,\hat y_i}
+[\mathbb{1}(\hat y_i=y_i)]
+$$
+
+where the reward is **1 only for correct answers**.
+
+---
+
+#### _Quiet-STaR: Language Models Can Teach Themselves to Think Before Speaking_ [5]
+
+<br>
+
+<center><img width="800" src="../imgs/course10/quiet_star.png"></center>
+
+
+---
+
+#### Reinforcement Learning with Verifiable Rewards (RLVR)
+
+_Tülu 3: Pushing Frontiers in Open Language Model Post-Training._ [8]
+
+<br>
+<center><img width="750" src="../imgs/course10/rlvr.png"></center>
+
+
+---
+
+### RLVR
+
+The model is trained on tasks for which the correctness can be (easily) verified, either in an exact, mathematical way (formal proofs) or through executables (e.g. unit tests).
+
+There is no uniform way of defining a task as verifiable; for example, mathematical proofs are (intuitively) among the most robustly verifiable tasks.
 
 ---
 
 
-<!--footer: "Learning Long-Range Dependencies" -->
-### Long-range attention models
+### RLVR: Verifying Function
 
-Sliding window attention: Longformer [11]
+Given a question $x$, a generated solution trajectory is:
 
-<center><img width="1100" src="https://d3i71xaburhd42.cloudfront.net/925ad2897d1b5decbea320d07e99afa9110e09b2/3-Figure2-1.png"/></center>
+$$
+\tau = (r_1,\ldots,r_T,y)
+$$
 
----
+where $r_{1:T}$ denotes the reasoning trace and $y$ the final answer.
 
+The verifier $V_\phi$ assigns a score to a candidate solution:
 
-### Long-range attention models
-
-Sliding window attention: Mistral 7B [12]
-
-<center><img width="900" src="https://d3i71xaburhd42.cloudfront.net/db633c6b1c286c0386f0078d8a2e6224e03a6227/2-Figure1-1.png"/></center>
-
----
-
-
-### State-space models: Mamba
-
-<center><img width="900" src="https://figures.semanticscholar.org/7bbc7595196a0606a07506c4fb1473e5e87f6082/3-Figure1-1.png"/></center>
-
-
+$$
+V_\phi(x,\tau) \rightarrow s \in [0,1]
+$$
 
 ---
 
+### RLVR: Verifying Function
 
-<!--footer: "Course 8: Domain-Specific NLP" -->
+Training data consists of solution trajectories with correctness labels:
+
+$$
+\mathcal{D}_V =
+\{(x_i,\tau_i,c_i)\}_{i=1}^{N},
+\quad c_i \in \{0,1\}
+$$
+
+The verifier is optimized 
+
+---
+
+<!--footer: "Course 10: Reasoning LLMs" -->
 <!--_class: lead -->
+
+
 ## Questions?
 
 ---
 
 
-### References
+### References -- TODO: Correct Bibliography
 
-[1] Ling, Wang, Yogatama, Dani, Dyer, Chris, and Blunsom, Phil. “[Program Induction by Rationale Generation : Learning to Solve and Explain Algebraic Word Problems.](https://doi.org/10.48550/arXiv.1705.04146.)” In Proceedings of the 58th Annual Meeting of the Association for Computational Linguistics, edited by Dan Jurafsky, Joyce Chai, Natalie Schluter, and Joel Tetreault, 158-167. Online: Association for Computational Linguistics, 2017.
-
----
-
+[1] Ling, Wang, Yogatama, Dani, Dyer, Chris, and Blunsom, Phil. “[Program Induction by Rationale Generation : Learning to Solve and Explain Algebraic Word Problems.](https://doi.org/10.48550/arXiv.1705.04146.)”, 2017.
 
 [2] Kahneman, Daniel. Thinking, Fast and Slow. Farrar, Straus and Giroux, 2011.
 
+[3] Kojima et al., Large Language Models are Zero-Shot Reasoners, NeurIPS 2022.
+
+---
+
+[4] Yao et al. Tree of Thoughts: Deliberate Problem Solving with Large Language Models. NeurIPS 2023.
+
+[5] Yasunaga et al. Large Language Models as Analogical Reasoners. ICLR 2024.
+
+[6] Zelikman et al. STaR: Bootstrapping Reasoning With Reasoning. NeurIPS 2022.
+
+[7] Wen et al. Reinforcement Learning with Verifiable Rewards Implicitly Incentivizes Correct Reasoning in Base LLMs. 
+
+---
+
+[8] Lambert et al. Tülu 3: Pushing Frontiers in Open Language Model Post-Training. 2025
