@@ -389,6 +389,9 @@ The verifier is optimized
 
 ---
 
+### DeepSeek-R1
+
+---
 <!--footer: "Course 10: Reasoning LLMs" -->
 <!--_class: lead -->
 
