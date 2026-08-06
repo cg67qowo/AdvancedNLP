@@ -24,7 +24,7 @@ Part 2: Advanced NLP Applications
 * **Session 8 (28/11, Cecilia)**: Advanced NLP Tasks
 * **Session 9 (5/12, TBA)**: Domain-specific NLP
 * **Session 10 (12/12, Cecilia)**: Multilingual NLP 
-* **Session 11 (19/12, Cecilia)**: Multimodal NLP
+* **Session 11 (19/12, Cecilia)**: Reasoning Language Models
 * **Session 12 (16/01, TBA)**: Final Presentations!
 
 ## Materials
