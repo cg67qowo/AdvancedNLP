@@ -11,21 +11,21 @@
 
 Part 1: General NLP 
 
-* **Session 1 (3/10, Cecilia)**: Recap
-* **Session 2 (17/10, Francis)**: Tokenization
-* **Session 3 (24/10, Francis)**: Language Modeling
-* **Session 4 (31/10, Francis)**: Modern NLP with limited resources
-* **Session 5 (7/11, Sofia)**: Modern Interpretability 
-* **Session 6 (14/11, TBA)**: Midterm project session
+* **Session 1 (16/09, Cecilia)**: Recap
+* **Session 2 (TBA, Francis)**: Tokenization
+* **Session 3 (02/10, Gabrielle)**: Language Modeling
+* **Session 4 (07/10, Cecilia)**: Modern NLP with limited resources
+* **Session 5 (14/10, Sofia)**: Modern Interpretability 
+* **Session 6 (TBA, Gabrielle, Sofia)**: Midterm project session
 
 Part 2: Advanced NLP Applications
 
-* **Session 7 (21/11, Sofia)**: Safety, Ethics, and Alignment of LMs
-* **Session 8 (28/11, Cecilia)**: Advanced NLP Tasks
-* **Session 9 (5/12, TBA)**: Domain-specific NLP
-* **Session 10 (12/12, Cecilia)**: Multilingual NLP 
-* **Session 11 (19/12, Cecilia)**: Reasoning Language Models
-* **Session 12 (16/01, TBA)**: Final Presentations!
+* **Session 7 (30/10, Sofia)**: Safety, Ethics, and Alignment of LMs
+* **Session 8 (18/11, Cecilia)**: Advanced NLP Tasks
+* **Session 9 (TBA, Francis)**: Domain-specific NLP
+* **Session 10 (02/12, Gabrielle)**: Multilingual NLP 
+* **Session 11 (10/12, Cecilia)**: Reasoning Language Models
+* **Session 12 (13/01, Gabrielle, Sofia, Cecilia)**: Final Presentations!
 
 ## Materials
 
@@ -51,7 +51,7 @@ The evaluation consists in a team project (3-5 people). The choice of the subjec
 
 :alarm_clock: The project follows 3 deadlines:
 
-- **Project announcement (before 2025/10/17)**: send an email to `francis.kulumba@inria.fr` with cc's `celia.nouri@inria.fr` and `rian.touchent@inria.fr` explaining
+- **Project announcement (before 2025/10/17)**: send an email to `francis.kulumba@inria.fr` with cc's `cecilia.graiff@inria.fr`, `gabrielle.le-bellier@inria.fr` and `sofia.de-tremiolles@inria.fr` explaining
   - The team members (also cc'ed)
   - A small description of the project (it can change later on)
 - **Project proposal (25% of final grade, before 2025/11/21)**: following [this template](https://docs.google.com/document/d/1JxkbE73ti4vjbIFcBfQpTOT0RfxTInotKyFf4Rglzi8/edit?usp=sharing), produce a project proposal explaining first attempts (e.g. version alpha), how they failed/succeeded and what you want to do before the delivery.
