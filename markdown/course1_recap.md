@@ -36,7 +36,9 @@ marp: true
 ---
 ### Datasources for NLP
 
-<center><img width="1000px" src="../imgs/course1/wooclap.png"/></center>
+<center><img width="450px" src="../imgs/course1/wooclap_qr.png"/></center>
+<center><img width="500px" src="../imgs/course1/wooclap_code.png"/></center>
+
 
 ---
 ### But also ..
@@ -49,8 +51,8 @@ marp: true
 ---
 ### What is NLP?
 
-<center><img width="1000px" src="../imgs/course1/wooclap.png"/></center>
-
+<center><img width="450px" src="../imgs/course1/wooclap_qr.png"/></center>
+<center><img width="500px" src="../imgs/course1/wooclap_code.png"/></center>
 ---
 
 ### NLP in recent years
@@ -141,20 +143,25 @@ marp: true
 <br>
 
 <div style="display: flex;">
-    <div style="flex: 33%;">
+    <div style="flex: 24%;">
         <center>
-        <img width="200px" src="../imgs/course1/celia.jpeg"/></br>
-        Célia <br/> Nouri </center>
+        <img width="200px" src="../imgs/course1/fototessera.jpg"/></br>
+        Cecilia <br/> Graiff </center>
     </div>
-    <div style="flex: 33%;">
+    <div style="flex: 24%;">
         <center>
         <img width="200px" src="../imgs/course1/francis.png"/></br>
         Francis <br/>Kulumba</center>
     </div>
-    <div style="flex: 33%;">
+    <div style="flex: 24%;">
         <center>
-        <img width="200px" src="../imgs/course1/rian.jpg"/></br>
-        Rian <br/>Touchent</center>
+        <img width="200px" src="../imgs/course1/pic"/></br>
+        Sofia <br/>De Tremiolles</center>
+    </div>
+        <div style="flex: 24%;">
+        <center>
+        <img width="200px" src="../imgs/course1/pic"/></br>
+        Gabrielle <br/>Le Bellier</center>
     </div>
 </div>
 
@@ -175,13 +182,13 @@ Part 1: General NLP
 
 ---
 ### Program
-* **Session 1 (Today, Célia)**: Recap
-* **Session 2 (17/10, Francis)**: Tokenization
-* **Session 3 (24/10, Francis)**: Language Modeling
-* **Session 4 (31/10, Francis)**: Modern NLP with limited resources
-* **Session 5 (7/11, Francis)**: Modern Interpretability 
+* **Session 1 (Today, Cecilia)**: Recap
+* **Session 2 (TBA, Francis)**: Tokenization
+* **Session 3 (02/10, Gabrielle)**: Language Modeling
+* **Session 4 (07/10, Cecilia)**: Modern NLP with limited resources
+* **Session 5 (14/10, Sofia)**: Modern Interpretability 
 
-* **Session 6 (14/11, Francis/Célia)**: Midterm project session
+* **Session 6 (TBA, Gabrielle/Sofia)**: Midterm project session
 
 ---
 ### Course organization
@@ -190,13 +197,13 @@ Part 2: Advanced NLP Applications
 * ***Goal :*** Understand, build and deploy NLP systems across languages, media, and real-world contexts.
 ---
 ### Program
-* **Session 7 (21/11, Célia)**: Human-Centered NLP
-* **Session 8 (28/11, Rian)**: Advanced NLP Tasks
-* **Session 9 (5/12, Rian)**: Domain-specific NLP
-* **Session 10 (12/12, Rian)**: Multilingual NLP 
-* **Session 11 (19/12, Célia)**: Multimodal NLP
+* **Session 7 (30/10, Sofia)**: Human-Centered NLP
+* **Session 8 (18/11, Cecilia)**: Advanced NLP Tasks
+* **Session 9 (TBA, Francis)**: Domain-specific NLP
+* **Session 10 (02/12, Gabrielle)**: Multilingual NLP 
+* **Session 11 (10/12, Cecilia)**: Reasoning LLMs
 
-* **Session 12 (16/01, Francis/Célia/Rian)**: Final Presentations!
+* **Session 12 (13/01, Cecilia/Gabrielle/Sofia)**: Final Presentations!
 
 ---
 
@@ -223,20 +230,20 @@ Based on a research article, conduct original experiments and produce a report.
 
 ---
 ### Evaluation
-* Mid-term project evaluation (14/11, 25%)
+* Mid-term project evaluation (TBA, 25%)
     * Project proposal
     * First elements
-* Final project (16/01, 75%)
+* Final project (13/01, 75%)
     * Short report showing each person's contribution (by 9/01)
-    * Github repo (by 9/01)
+    * Github repo (by 04/01)
     * Oral group presentations
 
 ---
 ### Evaluation
 * You can already constitute teams
 * Send an email:
-    * By 17/10
-    * To {celia.nouri, francis.kulumba, rian.touchent}@inria.fr
+    * By 02/10
+    * To {cecilia.graiff, francis.kulumba, gabrielle.le-bellier, sofia.de-tremiolles}@inria.fr
     * With the names of team members (also cc'ed)
     * *Demo* or *R&D*
     * Small description of project (few sentences)
@@ -253,7 +260,7 @@ Based on a research article, conduct original experiments and produce a report.
 ---
 <!--_class: lead -->
 # Quiz time!
-https://docs.google.com/forms/d/1BZaBagWlpVgKLsT2NdjJ4pXzPXTBnsxv52jEF4CR6GY/prefill
+https://docs.google.com/forms/d/e/1FAIpQLSdSQ7vlqeyLltk7Qn7GC4mG2NU45z1ARnux-ZvWjU84cA6Yhw/viewform?usp=dialog
 
 ---
 <!--_class: lead -->
