@@ -389,6 +389,75 @@ The verifier is optimized
 
 ---
 
+### GRPO: critic-free policy optimization
+
+GRPO (Shao et al., 2024) removes the value network of PPO and replaces
+$\hat{A}_t$ with a **group-relative** z-score of the terminal reward:
+
+$$
+\hat{A}_{i,t} = \frac{r_i - \text{mean}(\{r_1,\dots,r_G\})}{\text{std}(\{r_1,\dots,r_G\})}
+$$
+
+---
+
+#### GRPO: critic-free policy optimization (2)
+
+
+Objective (token-level ratio, sequence-level normalization):
+
+$$
+\mathcal{J}_{\text{GRPO}}(\theta)=\mathbb{E}_{q,\{o_i\}}\left[
+\frac{1}{G}\sum_{i=1}^G \frac{1}{|o_i|}\sum_{t=1}^{|o_i|}
+\min\!\big(\rho_{i,t}\hat{A}_{i,t},\ \text{clip}(\rho_{i,t},1{-}\varepsilon,1{+}\varepsilon)\hat{A}_{i,t}\big)
+\right] - \beta\, D_{\text{KL}}(\pi_\theta\Vert\pi_{\text{ref}})
+$$
+
+with importance ratio $\rho_{i,t}=\dfrac{\pi_\theta(o_{i,t}\mid q,o_{i,<t})}{\pi_{\theta_{\text{old}}}(o_{i,t}\mid q,o_{i,<t})}$.
+
+No critic → half the memory/compute of PPO; the "baseline" is the group mean itself.
+
+---
+### Dr.GRPO: removing the normalization bias
+
+Dr.GRPO (Liu et al., 2025) shows both normalizers are **not** part of
+the true policy-gradient estimator — they're optimization artifacts —
+and simply drops them:
+
+$$
+\hat{A}_{i} = r_i - \text{mean}(\{r_1,\dots,r_G\}) \qquad(\text{no } /\,\text{std})
+$$
+
+$$
+\mathcal{J}_{\text{Dr.GRPO}}(\theta)=\mathbb{E}\left[
+\frac{1}{\sum_i |o_i|}\sum_{i=1}^G\sum_{t=1}^{|o_i|}
+\min\!\big(\rho_{i,t}\hat{A}_i,\ \text{clip}(\rho_{i,t},1{-}\varepsilon,1{+}\varepsilon)\hat{A}_i\big)\right]
+$$
+
+Loss is aggregated with a **global** token count $\sum_i|o_i|$ instead
+of per-sample averaging — an unbiased Monte-Carlo estimate of the true
+policy gradient $\mathbb{E}[\nabla_\theta \log \pi_\theta(o\mid q)\, A(q,o)]$.
+
+---
+
+### DAPO: four fixes for long-CoT stability
+
+DAPO (Yu et al., 2025) targets the same failure modes with a different recipe, used to train an open R1-scale reasoner:
+
+$$
+\mathcal{J}_{\text{DAPO}}(\theta)=\mathbb{E}_{(q,a),\{o_i\}\sim\pi_{\theta_{\text{old}}}}
+\left[\frac{1}{\sum_{i=1}^G|o_i|}\sum_{i=1}^G\sum_{t=1}^{|o_i|}
+\min\!\big(\rho_{i,t}\hat{A}_{i,t},\ \text{clip}(\rho_{i,t},1{-}\varepsilon_{\text{low}},1{+}\varepsilon_{\text{high}})\hat{A}_{i,t}\big)\right]
+$$
+
+$$
+\text{s.t.}\quad 0 < \big|\{\,o_i : \text{is\_equivalent}(a,o_i)\,\}\big| < G
+$$
+
+- **Clip-Higher**: $\varepsilon_{\text{low}}{=}0.20,\ \varepsilon_{\text{high}}{=}0.28$ — asymmetric bound lets low-probability "surprising" correct tokens get reinforced more, mitigating entropy collapse.
+- **Dynamic Sampling**: resample any group with all-correct or all-incorrect rollouts (zero-variance $\hat{A}$, zero gradient) until it contains a mix.
+- **Token-level loss**: global $\sum_i|o_i|$ normalizer, same fix as Dr.GRPO.
+- **Overlong Reward Shaping**: soft length penalty beyond a threshold instead of hard truncation reward=0, reducing reward noise near the context limit.
+---
 ### DeepSeek-R1
 
 ---

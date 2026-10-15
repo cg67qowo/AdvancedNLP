@@ -11,21 +11,21 @@
 
 Part 1: General NLP 
 
-* **Session 1 (16/09, Cecilia)**: Recap
-* **Session 2 (TBA, Francis)**: Tokenization
-* **Session 3 (02/10, Gabrielle)**: Language Modeling
-* **Session 4 (07/10, Cecilia)**: Modern NLP with limited resources
-* **Session 5 (14/10, Sofia)**: Modern Interpretability 
-* **Session 6 (TBA, Gabrielle, Sofia)**: Midterm project session
+* **Session 1 (11/01, Cecilia)**: Recap
+* **Session 2 (12/01, Francis)**: Tokenization
+* **Session 3 (13/01, Gabrielle)**: Language Modeling
+* **Session 4 (14/01, Cecilia)**: Modern NLP with limited resources
+* **Session 5 (15/01, Sofia)**: Modern Interpretability 
+* **Session 6 (18/01, Gabrielle, Sofia)**: Midterm project session
 
 Part 2: Advanced NLP Applications
 
-* **Session 7 (30/10, Sofia)**: Safety, Ethics, and Alignment of LMs
-* **Session 8 (18/11, Cecilia)**: Advanced NLP Tasks
-* **Session 9 (TBA, Francis)**: Domain-specific NLP
-* **Session 10 (02/12, Gabrielle)**: Multilingual NLP 
-* **Session 11 (10/12, Cecilia)**: Reasoning Language Models
-* **Session 12 (13/01, Gabrielle, Sofia, Cecilia)**: Final Presentations!
+* **Session 8 (20/01, Cecilia)**: Advanced NLP Tasks
+* **Session 7 (25/01, Sofia)**: Safety, Ethics, and Alignment of LMs
+* **Session 9 (25/01, Francis)**: Domain-specific NLP
+* **Session 10 (26/01, Gabrielle)**: Multilingual NLP 
+* **Session 11 (27/01, Cecilia)**: Reasoning Language Models
+* **Session 12 (29/01, Gabrielle, Sofia, Cecilia)**: Final Presentations!
 
 ## Materials
 
